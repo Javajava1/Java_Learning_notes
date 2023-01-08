@@ -112,8 +112,119 @@ public class Leetcode3 {
 //        poly2.add(l4);
 //        ArrayList<ArrayList<Integer>> res = addPolynomial(poly1, poly2);
 //        System.out.println(res);
-        System.out.println(categorizeBox(2909, 3968, 3272, 727));
+//        System.out.println(categorizeBox(2909, 3968, 3272, 727));
+//        maximumCount(new int[]{-2,-1,-1,1,2,3});
+        System.out.println(isItPossible("aa", "ab"));
     }
+    /**
+     * @author:weilongzhao
+     * @time:2023/1/8
+     * leetcode 单周赛  6284. 使字符串总不同字符的数目相等
+     */
+    public static boolean isItPossible(String word1, String word2) {
+        Map<Character, Integer> map_word1 = new HashMap<>();
+        Map<Character, Integer> map_word2 = new HashMap<>();
+        for(int i = 0; i < word1.length(); i++){
+            map_word1.put(word1.charAt(i), map_word1.getOrDefault(word1.charAt(i), 0) + 1);
+        }
+        for(int i = 0; i < word2.length(); i++){
+            map_word2.put(word2.charAt(i), map_word2.getOrDefault(word2.charAt(i), 0) + 1);
+        }
+        for(Character c1 : map_word1.keySet()){
+            for(Character c2 : map_word2.keySet()){
+                int size1 = map_word1.size();
+                int size2 = map_word2.size();
+                if(!c1.equals(c2)){
+                    if(map_word1.getOrDefault(c2, 0) == 0){
+                        if(map_word1.getOrDefault(c1, 0) > 1){
+                            size1++;
+                        }
+                    }else{
+                        if(map_word1.getOrDefault(c1, 0) == 1){
+                            size1--;
+                        }
+                    }
+                    if(map_word2.getOrDefault(c1, 0) == 0){
+                        if(map_word2.getOrDefault(c2, 0) > 1){
+                            size2++;
+                        }
+                    }else{
+                        if(map_word2.getOrDefault(c2, 0) == 1){
+                            size2--;
+                        }
+                    }
+                }
+                if(size1 == size2){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    /**
+     * @author:weilongzhao
+     * @time:2023/1/8
+     * leetcode 单周赛  6285. 执行 K 次操作后的最大分数
+     */
+    public static long maxKelements(int[] nums, int k) {
+        PriorityQueue<Integer> pq = new PriorityQueue<>(new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o2 - o1;
+            }
+        });
+        for(int i : nums){
+            pq.offer(i);
+        }
+        long res = 0L;
+        for(int i = 0; i < k; i++){
+            int t = pq.poll();
+            res += t;
+            pq.offer((int) Math.ceil((double) t / 3));
+        }
+        return res;
+    }
+    /**
+     * @author:weilongzhao
+     * @time:2023/1/8
+     * leetcode 单周赛  6283. 正整数和负整数的最大计数
+     */
+    public static int maximumCount(int[] nums) {
+        //二分法
+        int indexP = getPositive(nums);
+        int indexN = getNegitive(nums);
+
+        return Math.max(nums.length - indexP, indexN + 1);
+    }
+    //获取第一个正数的下标
+    public static int getPositive(int[] nums){
+        int left = 0;
+        int right = nums.length - 1;
+        while(left <= right) {
+            int mid = (right - left) / 2 + left;
+            if(nums[mid] > 0) {
+                right = mid - 1;
+            }else {
+                left = mid + 1;
+            }
+        }
+        return left;
+    }
+    //获取最后一个负数的下标
+    public static int getNegitive(int[] nums){
+        int left = 0;
+        int right = nums.length - 1;
+        while(left <= right) {
+            int mid = (right - left) / 2 + left;
+            if(nums[mid] < 0){
+                left = mid + 1;
+            }else {
+                right = mid - 1;
+            }
+        }
+        return right;
+    }
+
     /**
      * @author:weilongzhao
      * @time:2023/1/8
